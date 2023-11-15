@@ -3,59 +3,59 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pygments-plugin-scaffolding" # change this to a package name for your plugin
+name = "pygments-plugin-systemverilog" # change this to a package name for your plugin
 version = "0.0.1"
 dependencies = ["pygments"]
 readme = "README.md"
 
 
-# Declare plugin lexers in this table. The key (like `example_lexer` below) are
+# Declare plugin lexers in this table. The key (like `sv_lexer` below) are
 # not significant. The value has the form `module_name:ClassName`. The lexer
 # class will be imported using `from module_name import ClassName`.
 
-# See the attributes declared in example_lexer.py for how to configure the
+# See the attributes declared in sv_lexer.py for how to configure the
 # language names and file patterns.
 
 [project.entry-points."pygments.lexers"]
-example_lexer = "example_lexer:ExampleLexer"
+sv_lexer = "sv_lexer:SVLexer"
 
 
 # Declare plugin formatters in this table. The key is not significant and the
-# value has the same format as for lexers. See example_formatter.py for
+# value has the same format as for lexers. See sv_formatter.py for
 # configuration options.
 
 [project.entry-points."pygments.formatters"]
-example_formatter = "example_formatter:ExampleFormatter"
+sv_formatter = "sv_formatter:SVFormatter"
 
 
 # Declare plugin styles in this table. The key *is* significant: it is the name
 # the style will be recognized as. In this example, we can use
 #
-#   pygmentize -Ostyle=example-style"
+#   pygmentize -Ostyle=sv-style"
 #
 # on the command line. Also,
 #
-#   pygments.styles.get_style_by_name("example-style")
+#   pygments.styles.get_style_by_name("sv-style")
 #
 # will return the style class.
 
 [project.entry-points."pygments.styles"]
-example-style = "example_style:ExampleStyle"
+sv-style = "sv_style:SVStyle"
 
 
 # Declare plugin filters in this table. The key *is* significant: it is the name
 # the filter will be recognized as. In this example, we can use
 #
-#  pygmentize -F example-filter
+#  pygmentize -F sv-filter
 #
 # on the command line. Also,
 #
-#   pygments.filters.find_filter_class("example-filter")
+#   pygments.filters.find_filter_class("sv-filter")
 #
 # will return the filter class.
 
 [project.entry-points."pygments.filters"]
-example-filter = "example_filter:ExampleFilter"
+sv-filter = "sv_filter:SVFilter"
 
 
 # This is a test command. Running it should print:
@@ -73,4 +73,4 @@ example-filter = "example_filter:ExampleFilter"
 #   hatch run test
 
 [tool.hatch.envs.default.scripts]
-test = "pygmentize -l example-lang -f example-format -F example-filter -O style=example-style test.exmpl"
+test = "pygmentize -l sv-lang -f sv-format -F sv-filter -O style=sv-style addr_policies.svh"
