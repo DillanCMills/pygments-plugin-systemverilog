@@ -40,7 +40,8 @@ sv_formatter = "sv_formatter:SVFormatter"
 # will return the style class.
 
 [project.entry-points."pygments.styles"]
-sv-style = "sv_style:SVStyle"
+sv-style-light = "sv_style:SVStyleLight"
+sv-style-dark = "sv_style:SVStyleDark"
 
 
 # Declare plugin filters in this table. The key *is* significant: it is the name
@@ -73,4 +74,4 @@ sv-filter = "sv_filter:SVFilter"
 #   hatch run test
 
 [tool.hatch.envs.default.scripts]
-test = "pygmentize -l sv-lang -f sv-format -F sv-filter -O style=sv-style addr_policies.svh"
+test = "pygmentize -l sv-lang -f sv-format -F sv-filter -O style=sv-style-light addr_policies.svh"
