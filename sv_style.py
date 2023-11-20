@@ -426,29 +426,29 @@ colors = {
 
 class SVStyleLight(Style):
     styles = {
-        "Comment": colors['Slate'][700],   
-        "Constant": colors['Amber'][700],
-        "Entity": colors['Blue'][700],
-        "Invalid": colors['Pink'][700],
-        "Keyword": colors['Violet'][700],
-        "Meta": colors['Stone'][700],
-        "Punctuation": colors['Green'][700],
-        "Storage": colors['Yellow'][700],
-        "String": colors['Green'][700],
-        "Support": colors['Teal'][700],
+        Comment: colors['Slate'][700],   
+        Constant: colors['Amber'][700],
+        Entity: colors['Blue'][700],
+        Invalid: colors['Pink'][700],
+        Keyword: colors['Violet'][700],
+        Meta: colors['Stone'][700],
+        Punctuation: colors['Green'][700],
+        Storage: colors['Yellow'][700],
+        String: colors['Green'][700],
+        Support: colors['Teal'][700],
     }
 
 
 class SVStyleDark(Style):
     styles = {
-        "Comment": colors['Slate'][300],   
-        "Constant": colors['Amber'][300],
-        "Entity": colors['Blue'][300],
-        "Invalid": colors['Pink'][300],
-        "Keyword": colors['Violet'][300],
-        "Meta": colors['Stone'][300],
-        "Punctuation": colors['Green'][300],
-        "Storage": colors['Yellow'][300],
-        "String": colors['Green'][300],
-        "Support": colors['Teal'][300],
+        Comment: colors['Slate'][300],   
+        Constant: colors['Amber'][300],
+        Entity: colors['Blue'][300],
+        Invalid: colors['Pink'][300],
+        Keyword: colors['Violet'][300],
+        Meta: colors['Stone'][300],
+        Punctuation: colors['Green'][300],
+        Storage: colors['Yellow'][300],
+        String: colors['Green'][300],
+        Support: colors['Teal'][300],
     }
