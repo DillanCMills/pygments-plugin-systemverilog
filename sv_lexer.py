@@ -29,7 +29,7 @@ SV_TYPES = {
     Constant.Numeric.Exp:                       'sv-cone',
     Constant.Numeric.Time:                      'sv-cont',
     Constant.Other:                             'sv-coo',
-    Constant.Other.Define:                       'sv-cood',
+    Constant.Other.Define:                      'sv-cood',
     Constant.Other.Net:                         'sv-coon',
     Constant.Other.Placeholder:                 'sv-coop',
     Constant.Other.Preprocessor:                'sv-coopr',
@@ -43,7 +43,7 @@ SV_TYPES = {
     Entity.Name.Sva:                            'sv-ensv',
     Entity.Name.Type:                           'sv-ent',
     Entity.Name.Type.Class:                     'sv-entc',
-    Entity.Name.Type.Define:                     'sv-entd',
+    Entity.Name.Type.Define:                    'sv-entd',
     Entity.Name.Type.Module:                    'sv-entm',
     Entity.Other:                               'sv-eo',
     Entity.Other.InheritedClass:                'sv-eoi',
@@ -73,9 +73,9 @@ SV_TYPES = {
     
     Meta:                                       'sv-m',
     Meta.Cast:                                  'sv-mc',
-    Meta.Define:                                 'sv-md',
-    Meta.Definition:                             'sv-mde',
-    Meta.Definition.Class:                       'sv-mdec',
+    Meta.Define:                                'sv-md',
+    Meta.Definition:                            'sv-mde',
+    Meta.Definition.Class:                      'sv-mdec',
     Meta.Function:                              'sv-mf',
     Meta.ModuleParam:                           'sv-mmp',
     Meta.Module:                                'sv-mm',
@@ -98,22 +98,23 @@ SV_TYPES = {
     Meta.Typedef.Class:                         'sv-mtc',
     Meta.Typedef.Simple:                        'sv-mts',
     Meta.Typedef.Struct:                        'sv-mtst',
-    Meta.Userdefined:                            'sv-mu',
+    Meta.Userdefined:                           'sv-mu',
     
     Punctuation:                                'sv-p',
-    Punctuation.Definition:                      'sv-pd',
-    Punctuation.Definition.Comment:              'sv-pdc',
-    Punctuation.Definition.String:               'sv-pds',
-    Punctuation.Definition.String.Begin:         'sv-pdsb',
-    Punctuation.Definition.String.End:           'sv-pdse',
+    Punctuation.Definition:                     'sv-pd',
+    Punctuation.Definition.Comment:             'sv-pdc',
+    Punctuation.Definition.String:              'sv-pds',
+    Punctuation.Definition.String.Begin:        'sv-pdsb',
+    Punctuation.Definition.String.End:          'sv-pdse',
     
     Storage:                                    'sv-s',
-    Storage.Modifier:                            'sv-sm',
+    Storage.Modifier:                           'sv-sm',
     Storage.Module:                             'sv-smo',
+    Storage.Property:                           'sv-sp',
     Storage.Type:                               'sv-sty',
     Storage.Type.Interface:                     'sv-sti',
     Storage.Type.Rand:                          'sv-str',
-    Storage.Type.Userdefined:                    'sv-stu',
+    Storage.Type.Userdefined:                   'sv-stu',
     Storage.Type.Uvm:                           'sv-stuvm',
     
     String:                                     'sv-st',
@@ -219,11 +220,10 @@ class SVLexer(RegexLexer):
     ]
 
     portDir = [
-        # match ports with size declarations
-        (r'(?:\s*\b)(output|input|inout|ref)(?:\s+)(?:([a-zA-Z_][a-zA-Z0-9_]*)(::))?([a-zA-Z_][a-zA-Z0-9_]*)?(?:\s+)(?=\[[a-zA-Z0-9_\-\+]*:[a-zA-Z0-9_\-\+]*\]\s+[a-zA-Z_][a-zA-Z0-9_\s]*)', bygroups(Support.Type, Support.Type.Scope, Keyword.Operator.Scope, Storage.Type.Interface)),
-        # match ports without size declarations
-        (r'(?:\s*\b)(output|input|inout|ref)(?:\s+)(?:([a-zA-Z_][a-zA-Z0-9_]*)(::))?([a-zA-Z_][a-zA-Z0-9_]*)?(?:\s+)(?=[a-zA-Z_][a-zA-Z0-9_\s]*)', bygroups(Support.Type, Support.Type.Scope, Keyword.Operator.Scope, Storage.Type.Interface)),
+        (r'([a-zA-Z_][a-zA-Z0-9_]*\b\s+)?(?:(?:\[([a-zA-Z0-9_\-\+]*):([a-zA-Z0-9_\-\+]*)\]\s*)*([a-zA-Z_][a-zA-Z0-9_\s]*)(?:\[([a-zA-Z0-9_\-\+]*)(?::([a-zA-Z0-9_\-\+]*))?\]\s*)*)', bygroups(Storage.Type.Interface, Constant.Numeric, Constant.Numeric, Storage, Constant.Numeric, Constant.Numeric)),
         (r'\s*\b(output|input|inout|ref)\b', Support.Type),
+        (r'([a-zA-Z_][a-zA-Z0-9_]*)(::)', bygroups(Support.Type.Scope, Keyword.Operator.Scope)),
+        (r'\)', Text, '#pop'),
     ]
     
     storageType = [
@@ -283,22 +283,22 @@ class SVLexer(RegexLexer):
         'root': [
             (r'\s+', Whitespace),
             # functions/tasks
-            (r'(?:\s*\b)(function|task)(?:\b)(\s+automatic)?', bygroups(Keyword.Control, Keyword.Control), 'function'),
-            (r'(?:\s*\b)(task)(?:\s+)(automatic)?(?:\s*)(\w+)(?:\s*;)', bygroups(Keyword.Control, Keyword.Control, Entity.Name.Function)),
+            (r'\b(function|task)(\s+)(automatic\s+)?', bygroups(Keyword.Control, Whitespace, Keyword.Control), 'function'),
+            (r'\b(task)(\s+)(automatic\s+)?(\w+)(\s*;)', bygroups(Keyword.Control, Whitespace, Keyword.Control, Entity.Name.Function, Text)),
             # structs
-            (r'(\s*\btypedef\s+)(struct|enum|union)(?:\b\s*)(packed)?(?:\s*)([a-zA-Z_][a-zA-Z0-9_]*)?', bygroups(Keyword.Control, Keyword.Control, Keyword.Control, Storage.Type), 'struct'),
+            (r'\b(typedef\s+)(struct|enum|union)(\b\s*packed)?(\s*[a-zA-Z_][a-zA-Z0-9_]*)?', bygroups(Keyword.Control, Keyword.Control, Keyword.Control, Storage.Type), 'struct'),
             # typedef class
-            (r'(\s*\btypedef\s+class\s+)([a-zA-Z_][a-zA-Z0-9_]*)(?:\s*;)', bygroups(Keyword.Control, Entity.Name.Declaration)),
+            (r'\b(typedef\s+class\s+)([a-zA-Z_][a-zA-Z0-9_]*)(\s*;)', bygroups(Keyword.Control, Entity.Name.Declaration, Text)),
             # typedef simple
-            (r'\s*\btypedef\b', Keyword.Control, 'typedef'),
+            (r'\btypedef\b', Keyword.Control, 'typedef'),
             # module declaration
-            (r'(\s*module\s+\b)([a-zA-Z_][a-zA-Z0-9_]*\b)', bygroups(Keyword.Control, Entity.Name.Type.Module), 'module'),
+            (r'(\bmodule\s+\b)([a-zA-Z_][a-zA-Z0-9_]*\b)', bygroups(Keyword.Control, Entity.Name.Type.Module), 'module'),
             # sequence
             (r'(\bsequence\s+)([a-zA-Z_][a-zA-Z0-9_]*)', bygroups(Keyword.Control, Entity.Name.Function)),
             # bing directive
             (r'(\bbind\s+)([a-zA-Z_][a-zA-Z0-9_\.]*\b)', bygroups(Keyword.Control)),
             # labeled block
-            (r'(?:\s*)(begin|fork)(\s*:\s*)([a-zA-Z_][a-zA-Z0-9_]*\b)', bygroups(Keyword.Other.Block, Keyword.Operator, Entity.Name.Section)),
+            (r'\b(begin|fork)(\s*:\s*)([a-zA-Z_][a-zA-Z0-9_]*\b)', bygroups(Keyword.Other.Block, Keyword.Operator, Entity.Name.Section)),
             # sva property
             (r'(\bproperty\s+)(\w+)', bygroups(Keyword.Sva, Entity.Name.Sva)),
             # sva assert
@@ -307,6 +307,8 @@ class SVLexer(RegexLexer):
             (r'(\s*//\s*)(psl\s+)(?:(\w+)\s*(:))?(?:\s*)(default|assert|assume)', bygroups(Comment.Line.DoubleSlash, Keyword.Psl, Entity.Psl.Name, Keyword.Operator, Keyword.Psl), 'psl'),
             # psl multiline
             (r'(\s*/\*\s*)(psl)', bygroups(Comment.Block, Keyword.Psl), 'pslmulti'),
+            # inside operator
+            (r'(inside\s+)({)', bygroups(Keyword.Control, Text), 'inside'),
             # keyword
             (r'(?:\s*\b)(automatic|cell|config|deassign|defparam|design|disable|edge|endconfig|endgenerate|endspecify|endtable|event|generate|genvar|ifnone|incdir|instance|liblist|library|macromodule|negedge|noshowcancelled|posedge|pulsestyle_onevent|pulsestyle_ondetect|scalared|showcancelled|specify|specparam|table|use|vectored)(?:\b)', bygroups(Keyword.Other)),
             (r'(?:\s*\b)(initial|always|wait|force|release|assign|always_comb|always_ff|always_latch|forever|repeat|while|for|if|iff|else|case|casex|casez|default|endcase|return|break|continue|do|foreach|with|inside|dist|clocking|cover|coverpoint|property|bins|binsof|illegal_bins|ignore_bins|randcase|modport|matches|solve|static|assert|assume|before|expect|cross|ref|first_match|srandom|struct|packed|final|chandle|alias|tagged|extern|throughout|timeprecision|timeunit|priority|type|union|uwire|wait_order|triggered|randsequence|import|export|context|pure|intersect|wildcard|within|new|typedef|enum|this|super|begin|fork|forkjoin|unique|unique0|priority)(?:\b)', bygroups(Keyword.Control)),
@@ -318,7 +320,7 @@ class SVLexer(RegexLexer):
             (r'(?:([a-zA-Z_][a-zA-Z0-9_]*)\s*(:))?(?:\s*)(coverpoint|cross)(\s+[a-zA-Z_][a-zA-Z0-9_]*)', bygroups(Entity.Name.Type.Class, Keyword.Operator.Other, Keyword.Control)),
             (r'(?:\b)(virtual\s+)?(class\s+)(\b[a-zA-Z_][a-zA-Z0-9_]*\b)', bygroups(Keyword.Control, Keyword.Control, Entity.Name.Type.Class)),
             (r'(\bextends\s+)([a-zA-Z_][a-zA-Z0-9_]*\b)', bygroups(Keyword.Control, Entity.Other.InheritedClass))
-        ] + allTypes + operators + portDir + [
+        ] + allTypes + operators + [
             (r'\b(and|nand|nor|or|xor|xnor|buf|not|bufif[01]|notif[01]|r?[npc]mos|tran|r?tranif[01]|pullup|pulldown)\b', Support.Type)
         ] + strings + [
             (r'\$\b([a-zA-Z_][a-zA-Z0-9_]*)\b', Support.Function),
@@ -342,8 +344,10 @@ class SVLexer(RegexLexer):
         ] + storageScope + functions + constants,
         'function': [
             (r';', Text, '#pop'),
-            (r'(?:\b)([a-zA-Z_][a-zA-Z0-9_]*\s+)?([a-zA-Z_][a-zA-Z0-9_:]*\s*)(?=\(|;)', bygroups(Storage.Type, Entity.Name.Function)),
-        ] + portDir + baseGrammar,
+            (r'\(', Text, 'portlist'),
+            (r'([a-zA-Z_][a-zA-Z0-9_]*\s+)?([a-zA-Z_][a-zA-Z0-9_:]*\s*)(?=\(|;)', bygroups(Storage.Type, Entity.Name.Function)),
+        ] + baseGrammar,
+        'portlist': portDir,
         'struct': [
             (r'(}\s*)([a-zA-Z_][a-zA-Z0-9_]*)(?:\s*;)', bygroups(Keyword.Operator.Other, Entity.Name.Function), '#pop'),
         ] + structAnonymous + baseGrammar,
@@ -353,7 +357,8 @@ class SVLexer(RegexLexer):
         ] + baseGrammar + moduleBinding,
         'module': [
             (r';', Text, '#pop'),
-        ] + portDir + [
+            (r'\(', Text, 'portlist'),
+        ] + [
             (r'\s*(parameter)', Keyword.Other)
         ] + baseGrammar + ifmodport,
         'psl': [
@@ -380,9 +385,11 @@ class SVLexer(RegexLexer):
         ] + comments + strings + operators + constants + storageScope,
         'comment': [
             (r'\*/', Comment.Block, '#pop'),
+            (r'(.*?)(?=\*/)', Comment.Block),
         ],
         'string': [
             (r'"', Punctuation.Definition.String.End, '#pop'),
+            (r'[^"]+', String.Quoted.Double),
         ],
         'modulebinding': [
             (r'\)', Text, '#pop'),
@@ -399,5 +406,11 @@ class SVLexer(RegexLexer):
         ],
         'structanonymous': [
             (r'(})(\s*[a-zA-Z_]\w*)(?:\s*;)', bygroups(Keyword.Operator.Other), '#pop'),
-        ]
+        ],
+        'inside': [
+            (r'}', Text, '#pop'),
+            (r'\b[a-zA-Z_][a-zA-Z0-9_]*', Storage),
+            (r'\.[a-zA-Z_][a-zA-Z0-9_]*', Storage.Property),
+            (r',', Text),
+        ] + baseGrammar,
     }

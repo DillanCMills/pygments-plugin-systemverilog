@@ -110,6 +110,7 @@ SV_TYPES = {
     Storage:                                    'sv-s',
     Storage.Modifier:                           'sv-sm',
     Storage.Module:                             'sv-smo',
+    Storage.Property:                           'sv-sp',
     Storage.Type:                               'sv-sty',
     Storage.Type.Interface:                     'sv-sti',
     Storage.Type.Rand:                          'sv-str',
@@ -426,29 +427,44 @@ colors = {
 
 class SVStyleLight(Style):
     styles = {
-        Comment: colors['Slate'][700],   
-        Constant: colors['Amber'][700],
+        Comment: colors['Green'][700],
+        Constant: colors['Lime'][700],
+        Constant.Other.Preprocessor: colors['Orange'][700],
         Entity: colors['Blue'][700],
         Invalid: colors['Pink'][700],
         Keyword: colors['Violet'][700],
+        Keyword.Control: colors['Amber'][700],
         Meta: colors['Stone'][700],
-        Punctuation: colors['Green'][700],
-        Storage: colors['Yellow'][700],
-        String: colors['Green'][700],
+        Punctuation: f"italic {colors['Green'][700]}",
+        Punctuation.Definition.String: colors['Yellow'][700],
+        Storage.Modifier: colors['Fuchsia'][700],
+        Storage.Module: colors['Fuchsia'][700],
+        Storage.Property: colors['Fuchsia'][700],
+        Storage.Type: colors['Fuchsia'][700],
+        String: colors['Yellow'][700],
         Support: colors['Teal'][700],
+        Token: colors['Slate'][950], # everything left gets set to "error" by default. This is not really a good solution but I can't be bothered. 
+        
     }
 
 
 class SVStyleDark(Style):
     styles = {
-        Comment: colors['Slate'][300],   
-        Constant: colors['Amber'][300],
-        Entity: colors['Blue'][300],
+        Comment: f"italic {colors['Green'][300]}",
+        Constant: colors['Lime'][300],
+        Constant.Other.Preprocessor: colors['Orange'][300],
+        Entity: colors['Blue'][500],
         Invalid: colors['Pink'][300],
-        Keyword: colors['Violet'][300],
+        Keyword: colors['Violet'][400],
+        Keyword.Control: colors['Amber'][400],
         Meta: colors['Stone'][300],
-        Punctuation: colors['Green'][300],
-        Storage: colors['Yellow'][300],
-        String: colors['Green'][300],
-        Support: colors['Teal'][300],
+        Punctuation: f"italic {colors['Green'][300]}",
+        Punctuation.Definition.String: colors['Yellow'][300],
+        Storage.Modifier: colors['Fuchsia'][400],
+        Storage.Module: colors['Fuchsia'][400],
+        Storage.Property: colors['Fuchsia'][400],
+        Storage.Type: colors['Fuchsia'][400],
+        String: colors['Yellow'][300],
+        Support: colors['Teal'][400],
+        Token: colors['Slate'][50],
     }
