@@ -8,6 +8,8 @@ version = "0.0.1"
 dependencies = ["pygments"]
 readme = "README.md"
 
+[tool.hatch.build.targets.wheel]
+packages = ["."]
 
 # Declare plugin lexers in this table. The key (like `sv_lexer` below) are
 # not significant. The value has the form `module_name:ClassName`. The lexer

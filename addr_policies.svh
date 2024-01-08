@@ -5,7 +5,7 @@ class addr_policy_base extends policy_base#(addr_txn);
         addr_range rng = new(min, max);
         ranges.push_back(rng);
     endfunction
-endclass
+endclass: addr_policy_base
 
 class addr_permit_policy extends addr_policy_base;
     rand int selection;
@@ -19,7 +19,7 @@ class addr_permit_policy extends addr_policy_base;
             }
         }
     }
-endclass
+endclass: addr_permit_policy
 
 class addr_prohibit_policy extends addr_policy_base;
     constraint c_addr_prohibit {
@@ -27,4 +27,4 @@ class addr_prohibit_policy extends addr_policy_base;
             !(item.addr inside {[ranges[i].min:ranges[i].max - item.size + 1]});
         }
     }
-endclass
+endclass: addr_prohibit_policy
